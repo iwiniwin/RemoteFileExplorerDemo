@@ -4,4 +4,5 @@ textComponent.text = "Hello, Wlrod"
 
 -- xlua.hotfix(CS.Game.ChangeTextColor, "Start", function(self)
 --     self:GetComponent(typeof(CS.UnityEngine.UI.Text)).color = CS.UnityEngine.Color.green
+--     xlua.hotfix(CS.Game.ChangeTextColor, "Start", nil)
 -- end)
