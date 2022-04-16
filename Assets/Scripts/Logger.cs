@@ -151,7 +151,6 @@ namespace Litchi
             data.trace = stackTrace;
             data.type = type;
             data.frame = frame;
-            data.time = Time.unscaledDeltaTime;
             return data;
         }
 
