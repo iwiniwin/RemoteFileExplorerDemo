@@ -54,7 +54,7 @@ namespace Litchi
 #if LOG_ENCRYPT
             m_LogFileName = string.Format("{0}E.log", m_StartDateTime.ToString("yyyy_MM_dd_HH_mm_ss"));
 #else
-            m_LogFileName = string.Format("game.log");
+            m_LogFileName = string.Format("{0}.log", m_StartDateTime.ToString("yyyy_MM_dd_HH_mm_ss"));
 #endif
             m_LogFilePath = Combine(m_LogDirectory, m_LogFileName);
             if(!File.Exists(m_LogDirectory))
@@ -118,6 +118,26 @@ namespace Litchi
                     }
                     m_WriteCountSinceLastFlush ++;
                 }
+
+                if (m_EnableSaveAs && !string.IsNullOrEmpty(m_SaveAsPath))
+                {
+                    m_EnableSaveAs = false;
+                    m_StreamWriter.Flush();
+                    m_StreamWriter.Close();
+                    try
+                    {
+                        File.Copy(m_LogFilePath, m_SaveAsPath, true);
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.LogException(e);
+                        throw;
+                    }
+                    finally
+                    {
+                        m_StreamWriter = new StreamWriter(m_LogFilePath, true);
+                    }
+                }
                 m_ResetEvent.Reset();
                 // 达到单个日志上限，不再打印日志
             }
@@ -176,8 +196,18 @@ namespace Litchi
                 m_WriteThread = null;
             }
         }
-
-        public string Combine(string path1, string path2)
+        
+        private volatile string m_SaveAsPath;
+        private volatile bool m_EnableSaveAs;
+        public void SaveAs(string path)
+        {
+            if(string.IsNullOrEmpty(path)) return;
+            m_SaveAsPath = path;
+            m_EnableSaveAs = true;
+            m_ResetEvent.Set();
+        }
+        
+        public static string Combine(string path1, string path2)
         {
             return path1 + "/" + path2;
         }

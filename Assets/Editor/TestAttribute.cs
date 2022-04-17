@@ -6,6 +6,7 @@ public class TestAttribute
     [CustomMenu("pull game log")]
     public static void PullLog(ManipulatorWrapper manipulator)
     {
-        manipulator.Download("game.log", Application.dataPath.Replace("/Assets", "") + "RemoteLogs/game.log");  // 将log文件下载到本地
+        string remoteLogPath = manipulator.GetRemotePath("Application.persistentDataPath") + "/Logs/game.log";
+        manipulator.Download(remoteLogPath, Application.dataPath.Replace("/Assets", "") + "/Logs/game.log");  // 将log文件下载到本地
     }
 }

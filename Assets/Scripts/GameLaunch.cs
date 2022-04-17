@@ -1,6 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.IO;
 using UnityEngine;
+using UnityEngine.UI;
 using Logger = Litchi.Logger;
 
 namespace GameLaunch 
@@ -16,6 +16,17 @@ namespace GameLaunch
 
             XLuaManager.instance.LoadScript("changetextcontent");
             Debug.Log("[GameLaunch] load changetextcontent finish...");
+        }
+
+        public void SaveLogFile()
+        {
+            string logDirectory = Application.persistentDataPath + "/Logs";
+            Debug.Log(logDirectory);
+            if (!Directory.Exists(logDirectory))
+            {
+                Directory.CreateDirectory(logDirectory);
+            }
+            Logger.instance.SaveAs(logDirectory + "/game.log");
         }
     }
 }
